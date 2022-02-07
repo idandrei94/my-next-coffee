@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
 import Image from 'next/image';
-import coffeeStoresData from '../../data/coffee-stores.json';
+import { fetchCoffeeStores } from '../../lib/coffee-stores';
 
 // Import the FontAwesomeIcon component
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,9 +12,11 @@ import { faArrowLeft, faCoffee } from '@fortawesome/free-solid-svg-icons';
 
 export const getStaticProps = async (staticProps) => {
   const params = staticProps.params;
+
+  const coffeeStores = await fetchCoffeeStores();
   return {
     props: {
-      coffeeStore: coffeeStoresData.find((coffeeStore) => {
+      coffeeStore: coffeeStores.find((coffeeStore) => {
         return coffeeStore.id.toString() === params.id;
       }),
     },
@@ -22,9 +24,10 @@ export const getStaticProps = async (staticProps) => {
 };
 
 export const getStaticPaths = async () => {
-  const paths = coffeeStoresData.map((coffeeStore) => {
+  const coffeeStores = await fetchCoffeeStores();
+  const paths = coffeeStores.map((coffeeStore) => {
     return {
-      params: { id: coffeeStore.id.toString() },
+      params: { id: coffeeStore.id.toString() || '1' },
     };
   });
   return {
@@ -78,7 +81,10 @@ const CoffeeStore = (props) => {
           <div className="grid grid-cols-1 grid-rows-2 sm:grid-rows-1 sm:grid-cols-2 md:grid-cols-3 justify-items-stretch rounded-lg mb-10 w-full overflow-hidden">
             <div className="w-full sm:rounded-l-lg overflow-hidden relative md:col-span-2">
               <Image
-                src={imgUrl}
+                src={
+                  imgUrl ||
+                  'https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80'
+                }
                 alt={name}
                 width={600}
                 height={360}
