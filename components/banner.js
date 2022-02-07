@@ -4,7 +4,6 @@ const Banner = (props) => {
   return (
     <div className="flex flex-col items-center py-16 px-20">
       <Image
-        // loader={myLoader}
         src="/static/coffee-logo.svg"
         alt="My Next Coffee Logo"
         width={500}
