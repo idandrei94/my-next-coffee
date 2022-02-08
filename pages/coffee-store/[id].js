@@ -3,11 +3,8 @@ import Link from 'next/link';
 import Head from 'next/head';
 import Image from 'next/image';
 import { fetchCoffeeStores } from '../../lib/coffee-stores';
-
-// Import the FontAwesomeIcon component
+// import SpinnerLoading from '../../components/spinner';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-// import the icons you need
 import {
   faArrowLeft,
   faCoffee,
@@ -44,7 +41,13 @@ const CoffeeStore = (props) => {
   const router = useRouter();
 
   if (router.isFallback) {
-    return <div>Loading...</div>;
+    return (
+      <div className="text-coffee-100 bg-coffee-green bg-coffee-pattern h-[70vh] bg-no-repeat bg-cover">
+        <div className="flex items-center justify-center container mx-auto p-6">
+          <h1>Loading...</h1>
+        </div>
+      </div>
+    );
   }
 
   const { address, name, neighbourhood, distance, imgUrl } = props.coffeeStore;
@@ -74,7 +77,9 @@ const CoffeeStore = (props) => {
           <a>
             <div className="text-coffee-300 font-normal mt-4 mb-10 text-xl hover:text-white transition ease-in-out duration-200">
               <h2>
-                <FontAwesomeIcon className="mr-2" icon={faArrowLeft} />
+                <span className="text-base">
+                  <FontAwesomeIcon className="mr-2" icon={faArrowLeft} />
+                </span>
                 Back to Home
               </h2>
             </div>

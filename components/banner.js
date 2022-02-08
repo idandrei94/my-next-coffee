@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const Banner = (props) => {
   return (
-    <div className="flex flex-col items-center py-16 px-20">
+    <div className="flex flex-col items-center py-10 px-20">
       <Image
         src="/static/coffee-logo.svg"
         alt="My Next Coffee Logo"

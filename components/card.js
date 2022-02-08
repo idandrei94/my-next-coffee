@@ -23,8 +23,13 @@ const Card = (props) => {
           />
 
           <div className="flex flex-col items-start justify-between p-8 sm:p-4 bg-white">
-            <h1 className="text-coffee-green my-2 text-xl">{props.name}</h1>
-            <div className="flex flex-col pt-3">
+            <h1 className="text-coffee-green text-xl line-clamp-1">
+              {props.name}
+            </h1>
+            <p className="text-coffee-600 mt-1">
+              {props.neighbourhood || 'Oslo'}
+            </p>
+            <div className="flex justify-between w-full pr-3 pt-3">
               <div>
                 <p className="text-coffee-600 font-light text-base pb-1">
                   <FontAwesomeIcon className="mr-2" icon={faWalking} />
