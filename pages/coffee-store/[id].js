@@ -8,7 +8,11 @@ import { fetchCoffeeStores } from '../../lib/coffee-stores';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // import the icons you need
-import { faArrowLeft, faCoffee } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowLeft,
+  faCoffee,
+  faWalking,
+} from '@fortawesome/free-solid-svg-icons';
 
 export const getStaticProps = async (staticProps) => {
   const params = staticProps.params;
@@ -43,7 +47,7 @@ const CoffeeStore = (props) => {
     return <div>Loading...</div>;
   }
 
-  const { address, name, neighbourhood, imgUrl } = props.coffeeStore;
+  const { address, name, neighbourhood, distance, imgUrl } = props.coffeeStore;
 
   const handleUpvoteButton = () => {
     console.log('upvote');
@@ -99,15 +103,23 @@ const CoffeeStore = (props) => {
                   {name}
                 </h1>
               </div>
-              <div className="mb-4">
-                <h2 className="text-coffee-600 mb-4 font-normal">
+              <div className="mb-4 flex flex-col justify-evenly">
+                <h2 className="text-coffee-600 font-normal pb-2">
                   {neighbourhood}
                 </h2>
-                <p className="text-coffee-600 sm:mb-2 font-light">{address}</p>
-                <div className="text-coffee-600 text-2xl mt-8 font-normal">
-                  <p>
-                    <FontAwesomeIcon className="mr-3" icon={faCoffee} />1
-                  </p>
+                <p className="text-coffee-600 font-light">{address}</p>
+                <div className="flex flex-col pt-8">
+                  <div>
+                    <p className="text-coffee-600 font-normal text-lg pb-2">
+                      <FontAwesomeIcon className="mr-2" icon={faWalking} />
+                      {distance} m
+                    </p>
+                  </div>
+                  <div className="text-coffee-600 text-lg font-normal ">
+                    <p>
+                      <FontAwesomeIcon className="mr-2" icon={faCoffee} />1
+                    </p>
+                  </div>
                 </div>
 
                 <button

@@ -10,6 +10,7 @@ module.exports = {
       },
       colors: {
         'coffee-green': '#2f3b35',
+        'coffee-green-light': '#5b8457',
         'coffee-600': '#6b511e',
         'coffee-300': '#ddd6c4',
         'coffee-100': '#e6e1d4',
@@ -19,3 +20,5 @@ module.exports = {
   },
   plugins: [],
 };
+
+// #48663d, #444d45, #5b8457
