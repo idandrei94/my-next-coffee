@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'coffee-pattern': "url('/static/coffee-20.svg')",
+        'coffee-pattern': "url('/static/coffee-10.svg')",
       },
       colors: {
         'coffee-green': '#2f3b35',

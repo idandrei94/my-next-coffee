@@ -2,16 +2,8 @@ import React from 'react';
 import ReactPlayer from 'react-player';
 
 export default function VideoPlayer() {
-  const videoProperties = [
-    {
-      id: 1,
-      title: 'Woman drinking coffee',
-      src: '/drinking-coffee-mini.mp4',
-      credit: 'Video by Artem Podrez from Pexels',
-    },
-  ];
   return (
-    <div className="container mx-auto px-6 my-8">
+    <div className="container mx-auto w-2/3 sm:w-full sm:px-4 md:px-14 mt-8 mb-14">
       <div className="relative rounded-lg overflow-hidden">
         <ReactPlayer
           url="/static/drinking-coffee-mini.mp4"

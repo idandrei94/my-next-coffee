@@ -3,7 +3,7 @@ import { ACTION_TYPES, StoreContext } from '../store/store-context';
 import Head from 'next/head';
 import Banner from '../components/banner';
 import Card from '../components/card';
-import VideoPlayer from '../components/video-player';
+
 import { fetchCoffeeStores } from '../lib/coffee-stores';
 // Import the FontAwesomeIcon component
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -67,7 +67,7 @@ export default function Home(props) {
       <Head>
         <title>My Next Coffee | Home</title>
       </Head>
-      <main className="flex flex-col items-center bg-coffee-green bg-coffee-pattern bg-contain bg-center">
+      <main className="flex flex-col items-center bg-coffee-green bg-coffee-pattern bg-cover bg-center">
         <Banner
           buttonText={
             isFindingLocation ? (
@@ -81,9 +81,6 @@ export default function Home(props) {
           }
           handleOnClick={handleOnBannerBtnClick}
         />
-
-        {/* Video */}
-        <VideoPlayer />
 
         {locationErrorMsg && (
           <p className="text-coffee-100 text-xl">
