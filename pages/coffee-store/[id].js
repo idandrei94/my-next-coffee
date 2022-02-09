@@ -1,8 +1,15 @@
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
 import Image from 'next/image';
+
 import { fetchCoffeeStores } from '../../lib/coffee-stores';
+
+import { StoreContext } from '../../store/store-context';
+
+import { isEmpty } from '../../utils';
+
 // import SpinnerLoading from '../../components/spinner';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -11,46 +18,67 @@ import {
   faWalking,
 } from '@fortawesome/free-solid-svg-icons';
 
-export const getStaticProps = async (staticProps) => {
+export async function getStaticProps(staticProps) {
   const params = staticProps.params;
 
   const coffeeStores = await fetchCoffeeStores();
+  const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
+    return coffeeStore.id.toString() === params.id;
+  });
+
   return {
     props: {
-      coffeeStore: coffeeStores.find((coffeeStore) => {
-        return coffeeStore.id.toString() === params.id;
-      }),
+      coffeeStore: findCoffeeStoreById ? findCoffeeStoreById : {},
     },
   };
-};
+}
 
-export const getStaticPaths = async () => {
+export async function getStaticPaths() {
   const coffeeStores = await fetchCoffeeStores();
   const paths = coffeeStores.map((coffeeStore) => {
     return {
-      params: { id: coffeeStore.id.toString() || '1' },
+      params: { id: coffeeStore.id.toString() },
     };
   });
   return {
     paths,
     fallback: true,
   };
-};
+}
 
-const CoffeeStore = (props) => {
+const CoffeeStore = (initialProps) => {
   const router = useRouter();
 
   if (router.isFallback) {
     return (
-      <div className="text-coffee-100 bg-coffee-green bg-coffee-pattern h-[70vh] bg-no-repeat bg-cover">
-        <div className="flex items-center justify-center container mx-auto p-6">
+      <div className="text-coffee-100 bg-coffee-green bg-coffee-pattern h-[70vh] bg-no-repeat bg-cover flex items-center justify-center">
+        <div className="container mx-auto p-6">
           <h1>Loading...</h1>
         </div>
       </div>
     );
   }
 
-  const { address, name, neighbourhood, distance, imgUrl } = props.coffeeStore;
+  const id = router.query.id;
+
+  const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore);
+
+  const {
+    state: { coffeeStores },
+  } = useContext(StoreContext);
+
+  useEffect(() => {
+    if (isEmpty(initialProps.coffeeStore)) {
+      if (coffeeStores.length > 0) {
+        const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
+          return coffeeStore.id.toString() === id;
+        });
+        setCoffeeStore(findCoffeeStoreById);
+      }
+    }
+  }, [id]);
+
+  const { address, name, neighbourhood, distance, imgUrl } = coffeeStore;
 
   const handleUpvoteButton = () => {
     console.log('upvote');

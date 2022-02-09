@@ -31,12 +31,12 @@ const Card = (props) => {
             </p>
             <div className="flex justify-between w-full pr-3 pt-3">
               <div>
-                <p className="text-coffee-600 font-light text-base pb-1">
+                <p className="text-coffee-600 font-normal text-base pb-1">
                   <FontAwesomeIcon className="mr-2" icon={faWalking} />
                   {props.distance} m
                 </p>
               </div>
-              <div className="text-coffee-600 text-base font-light">
+              <div className="text-coffee-600 text-base font-normal">
                 <p>
                   <FontAwesomeIcon className="mr-2" icon={faCoffee} />1
                 </p>

@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { ACTION_TYPES, StoreContext } from '../store/store-context';
 import Head from 'next/head';
 import Banner from '../components/banner';
 import Card from '../components/card';
+import VideoPlayer from '../components/video-player';
 import { fetchCoffeeStores } from '../lib/coffee-stores';
 // Import the FontAwesomeIcon component
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,21 +21,33 @@ export async function getStaticProps(context) {
 }
 
 export default function Home(props) {
-  const { handleTrackLocation, latLong, locationErrorMsg, isFindingLocation } =
+  const { handleTrackLocation, locationErrorMsg, isFindingLocation } =
     useTrackLocation();
 
-  const [coffeeStores, setCoffeeStores] = useState('');
+  // const [coffeeStores, setCoffeeStores] = useState('');
 
   const [coffeeStoresError, setCoffeeStoresError] = useState(null);
+
+  const { dispatch, state } = useContext(StoreContext);
+
+  const { coffeeStores, latLong } = state;
 
   console.log({ latLong, locationErrorMsg });
 
   useEffect(async () => {
     if (latLong) {
       try {
-        const fetchedCoffeeStores = await fetchCoffeeStores(latLong, 31);
-        console.log({ fetchedCoffeeStores });
-        setCoffeeStores(fetchedCoffeeStores);
+        const response = await fetch(
+          `/api/getCoffeeStoresByLocation?latLong=${latLong}&limit=31`
+        );
+        const coffeeStores = await response.json();
+
+        // setCoffeeStores(fetchedCoffeeStores);
+        dispatch({
+          type: ACTION_TYPES.SET_COFFEE_STORES,
+          payload: { coffeeStores },
+        });
+        setCoffeeStoresError('');
       } catch (error) {
         //set error
         console.log({ error });
@@ -53,19 +67,24 @@ export default function Home(props) {
       <Head>
         <title>My Next Coffee | Home</title>
       </Head>
-      <main className="flex flex-col items-center bg-coffee-green bg-coffee-pattern bg-cover bg-center">
+      <main className="flex flex-col items-center bg-coffee-green bg-coffee-pattern bg-contain bg-center">
         <Banner
           buttonText={
             isFindingLocation ? (
               <>
-                <FontAwesomeIcon icon={faCoffee} /> ...
+                <FontAwesomeIcon icon={faCoffee} />
+                &nbsp; ...
               </>
             ) : (
-              'Find My Café'
+              <>Find My Café</>
             )
           }
           handleOnClick={handleOnBannerBtnClick}
         />
+
+        {/* Video */}
+        <VideoPlayer />
+
         {locationErrorMsg && (
           <p className="text-coffee-100 text-xl">
             <FontAwesomeIcon icon={faSurprise} />

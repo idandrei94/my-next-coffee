@@ -1,4 +1,5 @@
 import '../styles/globals.css';
+import StoreProvider from '../store/store-context';
 import Footer from '../components/footer';
 import '@fortawesome/fontawesome-svg-core/styles.css'; // import Font Awesome CSS
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -6,10 +7,10 @@ config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatic
 
 function MyApp({ Component, pageProps }) {
   return (
-    <div>
+    <StoreProvider>
       <Component {...pageProps} />
       <Footer />
-    </div>
+    </StoreProvider>
   );
 }
 
