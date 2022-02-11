@@ -13,6 +13,7 @@ export default function VideoPlayer() {
           controls={false}
           loop={false}
           muted={true}
+          playbackRate={1.75}
         />
       </div>
     </div>

@@ -67,21 +67,58 @@ const CoffeeStore = (initialProps) => {
     state: { coffeeStores },
   } = useContext(StoreContext);
 
+  const handleCreateCoffeeStore = async (coffeeStore) => {
+    try {
+      const { id, name, voting, distance, imgUrl, neighbourhood, address } =
+        coffeeStore;
+      const response = await fetch('/api/createCoffeeStore', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id,
+          name,
+          voting: 0,
+          distance,
+          imgUrl,
+          neighbourhood: neighbourhood || '',
+          address: address || '',
+        }),
+      });
+
+      const dbCoffeeStore = await response.json();
+      console.log({ dbCoffeeStore });
+    } catch (err) {
+      console.error('Error creating coffee store', err);
+    }
+  };
+
   useEffect(() => {
     if (isEmpty(initialProps.coffeeStore)) {
       if (coffeeStores.length > 0) {
-        const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
+        const coffeeStoreFromContext = coffeeStores.find((coffeeStore) => {
           return coffeeStore.id.toString() === id;
         });
-        setCoffeeStore(findCoffeeStoreById);
+
+        if (coffeeStoreFromContext) {
+          setCoffeeStore(coffeeStoreFromContext);
+          handleCreateCoffeeStore(coffeeStoreFromContext);
+        }
       }
+    } else {
+      handleCreateCoffeeStore(initialProps.coffeeStore);
     }
-  }, [id]);
+  }, [id, initialProps, initialProps.coffeeStore]);
 
   const { address, name, neighbourhood, distance, imgUrl } = coffeeStore;
 
+  const [votingCount, setVotingCount] = useState(0);
+
   const handleUpvoteButton = () => {
     console.log('upvote');
+    let count = votingCount + 1;
+    setVotingCount(count);
   };
 
   return (
@@ -150,7 +187,8 @@ const CoffeeStore = (initialProps) => {
                   </div>
                   <div className="text-coffee-600 text-lg font-normal ">
                     <p>
-                      <FontAwesomeIcon className="mr-2" icon={faCoffee} />1
+                      <FontAwesomeIcon className="mr-2" icon={faCoffee} />
+                      {votingCount}
                     </p>
                   </div>
                 </div>

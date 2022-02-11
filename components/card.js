@@ -1,13 +1,19 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-// Import the FontAwesomeIcon component
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-// import the icons you need
-import { faCoffee, faWalking } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCoffee as fasFaCoffee,
+  faHeart as fasFaHeart,
+  faPersonWalking,
+} from '@fortawesome/pro-solid-svg-icons';
+import {
+  faCoffee as farFaCoffee,
+  faHeart as farFaHeart,
+} from '@fortawesome/pro-regular-svg-icons';
 
 const Card = (props) => {
+  const distanceToCafe = (Math.log(props.distance) * Math.LOG10E + 1) | 0;
   return (
     <Link href={props.href}>
       <a>
@@ -26,19 +32,22 @@ const Card = (props) => {
             <h1 className="text-coffee-green text-xl line-clamp-1">
               {props.name}
             </h1>
-            <p className="text-coffee-600 mt-1">
-              {props.neighbourhood || 'Oslo'}
-            </p>
+            <p className="text-coffee-600 mt-1">{props.neighbourhood || ''}</p>
             <div className="flex justify-between w-full pr-3 pt-3">
               <div>
                 <p className="text-coffee-600 font-normal text-base pb-1">
-                  <FontAwesomeIcon className="mr-2" icon={faWalking} />
-                  {props.distance} m
+                  <FontAwesomeIcon className="mr-2" icon={faPersonWalking} />
+                  {distanceToCafe > 3
+                    ? (props.distance / 1000).toFixed(1) + ' km'
+                    : props.distance + ' m'}
                 </p>
+              </div>
+              <div className="text-red-400 text-base font-normal">
+                <FontAwesomeIcon className="mr-2" icon={farFaHeart} />
               </div>
               <div className="text-coffee-600 text-base font-normal">
                 <p>
-                  <FontAwesomeIcon className="mr-2" icon={faCoffee} />1
+                  <FontAwesomeIcon className="mr-2" icon={farFaCoffee} /> 0
                 </p>
               </div>
             </div>

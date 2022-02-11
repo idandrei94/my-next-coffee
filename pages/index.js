@@ -3,13 +3,15 @@ import { ACTION_TYPES, StoreContext } from '../store/store-context';
 import Head from 'next/head';
 import Banner from '../components/banner';
 import Card from '../components/card';
+import VideoPlayer from '../components/video-player';
 
 import { fetchCoffeeStores } from '../lib/coffee-stores';
-// Import the FontAwesomeIcon component
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-// import the icons you need
-import { faCoffee, faSurprise } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCoffee as fasFaCoffee,
+  faFaceHandOverMouth,
+  faPersonWalking,
+} from '@fortawesome/pro-solid-svg-icons';
 
 import useTrackLocation from '../hooks/use-track-location';
 
@@ -67,13 +69,12 @@ export default function Home(props) {
       <Head>
         <title>My Next Coffee | Home</title>
       </Head>
-      <main className="flex flex-col items-center bg-coffee-green bg-coffee-pattern bg-cover bg-center">
+      <main className="flex flex-col items-center bg-coffee-green bg-coffee-pattern bg-contain bg-center">
         <Banner
           buttonText={
             isFindingLocation ? (
               <>
-                <FontAwesomeIcon icon={faCoffee} />
-                &nbsp; ...
+                <FontAwesomeIcon icon={fasFaCoffee} spin />
               </>
             ) : (
               <>Find My Café</>
@@ -84,14 +85,14 @@ export default function Home(props) {
 
         {locationErrorMsg && (
           <p className="text-coffee-100 text-xl">
-            <FontAwesomeIcon icon={faSurprise} />
+            <FontAwesomeIcon icon={faFaceHandOverMouth} beat />
             &nbsp; Oops! Something went wrong: <br /> {locationErrorMsg}
           </p>
         )}
 
         {coffeeStoresError && (
           <p className="text-coffee-100 text-xl">
-            <FontAwesomeIcon icon={faSurprise} />
+            <FontAwesomeIcon icon={faFaceHandOverMouth} beat />
             &nbsp; Oops! Something went wrong: <br /> {coffeeStoresError}
           </p>
         )}
@@ -122,7 +123,13 @@ export default function Home(props) {
           </div>
         )}
 
-        {props.coffeeStores.length > 0 && (
+        <div className="pb-10">
+          {/* Video */}
+          <VideoPlayer />
+        </div>
+
+        {/* Static coffee shops */}
+        {/* {props.coffeeStores.length > 0 && (
           <div className="w-2/3 sm:w-full container sm:px-4 md:px-14">
             <h1 className="text-coffee-100 text-4xl py-2">Oslo City</h1>
             <div className="py-6 container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14 mb-10 sm:w-full">
@@ -143,7 +150,7 @@ export default function Home(props) {
               })}
             </div>
           </div>
-        )}
+        )} */}
       </main>
     </div>
   );
