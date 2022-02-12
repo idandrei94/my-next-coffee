@@ -5,18 +5,19 @@ import Head from 'next/head';
 import Image from 'next/image';
 
 import { fetchCoffeeStores } from '../../lib/coffee-stores';
-
 import { StoreContext } from '../../store/store-context';
-
 import { isEmpty } from '../../utils';
 
-// import SpinnerLoading from '../../components/spinner';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faArrowLeft,
-  faCoffee,
-  faWalking,
-} from '@fortawesome/free-solid-svg-icons';
+  faCoffeeBeans,
+  faCoffee as fasFaCoffee,
+} from '@fortawesome/pro-solid-svg-icons';
+import {
+  faArrowLeftLong,
+  faPersonWalking,
+  faCoffee as farFaCoffee,
+} from '@fortawesome/pro-regular-svg-icons';
 
 export async function getStaticProps(staticProps) {
   const params = staticProps.params;
@@ -120,6 +121,7 @@ const CoffeeStore = (initialProps) => {
     let count = votingCount + 1;
     setVotingCount(count);
   };
+  const distanceToCafe = (Math.log(coffeeStore.distance) * Math.LOG10E + 1) | 0;
 
   return (
     <div className="bg-coffee-green bg-coffee-pattern bg-cover bg-center">
@@ -142,10 +144,16 @@ const CoffeeStore = (initialProps) => {
           <a>
             <div className="text-coffee-300 font-normal mt-4 mb-10 text-xl hover:text-white transition ease-in-out duration-200">
               <h2>
-                <span className="text-base">
-                  <FontAwesomeIcon className="mr-2" icon={faArrowLeft} />
+                <span>
+                  <FontAwesomeIcon className="mr-2" icon={faArrowLeftLong} />
                 </span>
-                Back to Home
+                Go back{' '}
+                <span>
+                  <FontAwesomeIcon
+                    className="text-2xl pl-2 "
+                    icon={faCoffeeBeans}
+                  />
+                </span>
               </h2>
             </div>
           </a>
@@ -180,14 +188,19 @@ const CoffeeStore = (initialProps) => {
                 <p className="text-coffee-600 font-light">{address}</p>
                 <div className="flex flex-col pt-8">
                   <div>
-                    <p className="text-coffee-600 font-normal text-lg pb-2">
-                      <FontAwesomeIcon className="mr-2" icon={faWalking} />
-                      {distance} m
+                    <p className="text-coffee-600 font-normal text-lg pb-4">
+                      <FontAwesomeIcon
+                        className="mr-2"
+                        icon={faPersonWalking}
+                      />
+                      {distanceToCafe > 3
+                        ? (distance / 1000).toFixed(1) + ' km'
+                        : distance + ' m'}
                     </p>
                   </div>
                   <div className="text-coffee-600 text-lg font-normal ">
                     <p>
-                      <FontAwesomeIcon className="mr-2" icon={faCoffee} />
+                      <FontAwesomeIcon className="mr-2" icon={farFaCoffee} />
                       {votingCount}
                     </p>
                   </div>

@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoffeeBeans } from '@fortawesome/pro-solid-svg-icons';
 import {
   faFacebook,
   faInstagram,
@@ -48,10 +47,7 @@ const Footer = () => {
           </div>
           <div className="mt-8 md:mt-0 md:order-1">
             <p className="text-center text-base text-coffee-300">
-              &copy; {currentYear} My Next Coffee, Inc. All rights reserved{' '}
-              <span className="text-lg pl-2">
-                <FontAwesomeIcon icon={faCoffeeBeans} />
-              </span>
+              &copy; {currentYear} My Next Coffee, Inc. All rights reserved.
             </p>
           </div>
         </div>

@@ -5,11 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCoffee as fasFaCoffee,
   faHeart as fasFaHeart,
-  faPersonWalking,
 } from '@fortawesome/pro-solid-svg-icons';
 import {
   faCoffee as farFaCoffee,
   faHeart as farFaHeart,
+  faPersonWalking,
 } from '@fortawesome/pro-regular-svg-icons';
 
 const Card = (props) => {
