@@ -81,7 +81,6 @@ const CoffeeStore = (initialProps) => {
           address: address || '',
         }),
       });
-      console.log({ response });
 
       const dbCoffeeStore = await response.json();
     } catch (err) {
