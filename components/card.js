@@ -2,15 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faCoffee as fasFaCoffee,
-  faHeart as fasFaHeart,
-} from '@fortawesome/pro-solid-svg-icons';
-import {
-  faCoffee as farFaCoffee,
-  faHeart as farFaHeart,
-  faPersonWalking,
-} from '@fortawesome/pro-regular-svg-icons';
+
+import { faPersonWalking } from '@fortawesome/pro-regular-svg-icons';
 
 const Card = (props) => {
   const distanceToCafe = (Math.log(props.distance) * Math.LOG10E + 1) | 0;
@@ -40,14 +33,6 @@ const Card = (props) => {
                   {distanceToCafe > 3
                     ? (props.distance / 1000).toFixed(1) + ' km'
                     : props.distance + ' m'}
-                </p>
-              </div>
-              <div className="text-red-400 text-base font-normal">
-                <FontAwesomeIcon className="mr-2" icon={farFaHeart} />
-              </div>
-              <div className="text-coffee-600 text-base font-normal">
-                <p>
-                  <FontAwesomeIcon className="mr-2" icon={farFaCoffee} /> 0
                 </p>
               </div>
             </div>

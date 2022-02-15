@@ -4,19 +4,22 @@ import Link from 'next/link';
 import Head from 'next/head';
 import Image from 'next/image';
 
+import useSWR from 'swr';
+
 import { fetchCoffeeStores } from '../../lib/coffee-stores';
 import { StoreContext } from '../../store/store-context';
-import { isEmpty } from '../../utils';
+import { fetcher, isEmpty } from '../../utils';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCoffeeBeans,
   faCoffee as fasFaCoffee,
+  faHeart as fasFaHeart,
 } from '@fortawesome/pro-solid-svg-icons';
 import {
   faArrowLeftLong,
   faPersonWalking,
-  faCoffee as farFaCoffee,
+  faHeart as farFaHeart,
 } from '@fortawesome/pro-regular-svg-icons';
 
 export async function getStaticProps(staticProps) {
@@ -50,19 +53,10 @@ export async function getStaticPaths() {
 const CoffeeStore = (initialProps) => {
   const router = useRouter();
 
-  if (router.isFallback) {
-    return (
-      <div className="text-coffee-100 bg-coffee-green bg-coffee-pattern h-[70vh] bg-no-repeat bg-cover flex items-center justify-center">
-        <div className="container mx-auto p-6">
-          <h1>Loading...</h1>
-        </div>
-      </div>
-    );
-  }
-
   const id = router.query.id;
 
-  const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore);
+  const [coffeeStore, setCoffeeStore] =
+    useState(initialProps.coffeeStore) || {};
 
   const {
     state: { coffeeStores },
@@ -87,11 +81,11 @@ const CoffeeStore = (initialProps) => {
           address: address || '',
         }),
       });
+      console.log({ response });
 
       const dbCoffeeStore = await response.json();
-      console.log({ dbCoffeeStore });
     } catch (err) {
-      console.error('Error creating coffee store', err);
+      console.error('Error creating coffee shop', err);
     }
   };
 
@@ -110,18 +104,71 @@ const CoffeeStore = (initialProps) => {
     } else {
       handleCreateCoffeeStore(initialProps.coffeeStore);
     }
-  }, [id, initialProps, initialProps.coffeeStore]);
+  }, [
+    id,
+    initialProps,
+    initialProps.coffeeStore,
+    coffeeStores,
+    setCoffeeStore,
+  ]);
 
-  const { address, name, neighbourhood, distance, imgUrl } = coffeeStore;
+  const {
+    address = '',
+    name = '',
+    neighbourhood = '',
+    distance = '',
+    imgUrl = '',
+  } = coffeeStore;
 
   const [votingCount, setVotingCount] = useState(0);
 
-  const handleUpvoteButton = () => {
-    console.log('upvote');
-    let count = votingCount + 1;
-    setVotingCount(count);
+  const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${id}`, fetcher, {
+    refreshInterval: 2000,
+    revalidateIfStale: true,
+  });
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setCoffeeStore(data[0]);
+
+      setVotingCount(data[0].voting);
+    }
+  }, [data, setCoffeeStore]);
+
+  if (router.isFallback) {
+    return <div>Loading...</div>;
+  }
+
+  const handleUpvoteButton = async () => {
+    try {
+      const response = await fetch('/api/favouriteCoffeeStoreById', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id,
+        }),
+      });
+
+      const dbCoffeeStore = await response.json();
+
+      if (dbCoffeeStore && dbCoffeeStore.length > 0) {
+        let count = votingCount + 1;
+        setVotingCount(count);
+      }
+    } catch (err) {
+      console.error('Error upvoting coffee shop', err);
+    }
   };
-  const distanceToCafe = (Math.log(coffeeStore.distance) * Math.LOG10E + 1) | 0;
+
+  if (error) {
+    return (
+      <div className="container mx-auto text-center">
+        <p>Something went wrong retrieving coffee shop page</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-coffee-green bg-coffee-pattern bg-cover bg-center">
@@ -129,7 +176,7 @@ const CoffeeStore = (initialProps) => {
         <title>{name}</title>
       </Head>
 
-      <div className="container mx-auto grid px-10 pt-10 pb-4 sm:p-8 md:px-20">
+      <div className="container mx-auto grid px-10 pt-10 pb-4 sm:p-8 md:px-20 lg:w-1/2">
         <div className="mx-auto w-1/2 sm:pt-10">
           <Image
             src="/static/coffee-logo.svg"
@@ -168,8 +215,6 @@ const CoffeeStore = (initialProps) => {
                   'https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80'
                 }
                 alt={name}
-                width={600}
-                height={360}
                 layout="fill"
                 objectFit="cover"
                 objectPosition="center"
@@ -193,14 +238,16 @@ const CoffeeStore = (initialProps) => {
                         className="mr-2"
                         icon={faPersonWalking}
                       />
-                      {distanceToCafe > 3
+                      {((Math.log(coffeeStore.distance) * Math.LOG10E + 1) |
+                        0) >
+                      3
                         ? (distance / 1000).toFixed(1) + ' km'
                         : distance + ' m'}
                     </p>
                   </div>
                   <div className="text-coffee-600 text-lg font-normal ">
                     <p>
-                      <FontAwesomeIcon className="mr-2" icon={farFaCoffee} />
+                      <FontAwesomeIcon className="mr-2" icon={fasFaCoffee} />
                       {votingCount}
                     </p>
                   </div>
@@ -208,9 +255,14 @@ const CoffeeStore = (initialProps) => {
 
                 <button
                   onClick={handleUpvoteButton}
-                  className="mt-8 bg-coffee-50 rounded-full px-6 py-2 text-coffee-600 hover:text-coffee-50 hover:bg-coffee-600 transition ease-in-out duration-200"
+                  className="mt-8 bg-coffee-50 rounded-full py-3 px-6 text-coffee-600 hover:text-coffee-50 hover:bg-coffee-600 transition ease-in-out duration-200 min-w-min"
                 >
-                  Upvote Café
+                  <p>
+                    <span className="text-red-400">
+                      <FontAwesomeIcon className="mr-2" icon={fasFaHeart} />
+                    </span>
+                    Café
+                  </p>
                 </button>
               </div>
             </div>

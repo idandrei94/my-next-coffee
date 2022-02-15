@@ -9,7 +9,7 @@ const getCoffeeStoreById = async (req, res) => {
 
   try {
     if (id) {
-      const records = findRecordByFilter(id);
+      const records = await findRecordByFilter(id);
 
       if (records.length !== 0) {
         res.json(records);
@@ -24,8 +24,6 @@ const getCoffeeStoreById = async (req, res) => {
     res.status(500);
     res.json({ message: 'Something went wrong: ', error });
   }
-
-  return <div>Enter</div>;
 };
 
 export default getCoffeeStoreById;

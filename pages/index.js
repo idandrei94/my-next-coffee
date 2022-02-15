@@ -26,41 +26,36 @@ export default function Home(props) {
   const { handleTrackLocation, locationErrorMsg, isFindingLocation } =
     useTrackLocation();
 
-  // const [coffeeStores, setCoffeeStores] = useState('');
-
   const [coffeeStoresError, setCoffeeStoresError] = useState(null);
 
   const { dispatch, state } = useContext(StoreContext);
 
   const { coffeeStores, latLong } = state;
 
-  console.log({ latLong, locationErrorMsg });
+  useEffect(() => {
+    const setCoffeeStoresByLocation = async () => {
+      if (latLong) {
+        try {
+          const response = await fetch(
+            `/api/getCoffeeStoresByLocation?latLong=${latLong}&limit=31`
+          );
+          const coffeeStores = await response.json();
 
-  useEffect(async () => {
-    if (latLong) {
-      try {
-        const response = await fetch(
-          `/api/getCoffeeStoresByLocation?latLong=${latLong}&limit=31`
-        );
-        const coffeeStores = await response.json();
-
-        // setCoffeeStores(fetchedCoffeeStores);
-        dispatch({
-          type: ACTION_TYPES.SET_COFFEE_STORES,
-          payload: { coffeeStores },
-        });
-        setCoffeeStoresError('');
-      } catch (error) {
-        //set error
-        console.log({ error });
-        setCoffeeStoresError(error.message);
+          dispatch({
+            type: ACTION_TYPES.SET_COFFEE_STORES,
+            payload: { coffeeStores },
+          });
+          setCoffeeStoresError('');
+        } catch (error) {
+          //set error
+          setCoffeeStoresError(error.message);
+        }
       }
-    }
-  }, [latLong]);
+    };
+    setCoffeeStoresByLocation();
+  }, [latLong, dispatch]);
 
   const handleOnBannerBtnClick = () => {
-    console.log('Hi, banner button');
-
     handleTrackLocation();
   };
 
@@ -69,7 +64,13 @@ export default function Home(props) {
       <Head>
         <title>My Next Coffee | Home</title>
       </Head>
-      <main className="flex flex-col items-center bg-coffee-green bg-coffee-pattern bg-cover bg-center">
+      <main
+        className={
+          isFindingLocation || coffeeStores.length > 0
+            ? 'flex flex-col items-center justify-between bg-coffee-green bg-coffee-pattern bg-cover bg-center min-h-[90vh] md:min-h-min py-10 md:p-10 lg:px-16 md:pb-20'
+            : 'flex flex-col md:flex-row items-center justify-between bg-coffee-green bg-coffee-pattern bg-cover bg-center min-h-[90vh] md:min-h-min py-10 md:p-10 lg:px-16 md:pb-20'
+        }
+      >
         <Banner
           buttonText={
             isFindingLocation ? (
@@ -82,6 +83,15 @@ export default function Home(props) {
           }
           handleOnClick={handleOnBannerBtnClick}
         />
+
+        {isFindingLocation || coffeeStores.length > 0 ? (
+          <></>
+        ) : (
+          <div className="hidden md:flex md:items-center md:justify-center container mx-auto xl:w-3/5 w-full md:p-0 md:w-1/2 md:pl-6">
+            {/* Video */}
+            <VideoPlayer />
+          </div>
+        )}
 
         {locationErrorMsg && (
           <p className="text-coffee-100 text-xl">
@@ -123,7 +133,7 @@ export default function Home(props) {
           </div>
         )}
 
-        <div className="pb-10">
+        <div className="block md:hidden container mx-auto w-5/6 pb-10 flex-none">
           {/* Video */}
           <VideoPlayer />
         </div>

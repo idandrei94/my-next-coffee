@@ -13,7 +13,7 @@ const createCoffeeStore = async (req, res) => {
 
     try {
       if (id) {
-        const records = findRecordByFilter(id);
+        const records = await findRecordByFilter(id);
 
         if (records.length !== 0) {
           res.json(records);
@@ -38,14 +38,15 @@ const createCoffeeStore = async (req, res) => {
             res.json(records);
           } else {
             res.status(400);
-            res.json({ message: 'ID is missing' });
+            res.json({ message: 'ID or name is missing' });
           }
         }
       } else {
         res.status(400);
-        res.json({ message: 'ID or name is missing' });
+        res.json({ message: 'ID is missing' });
       }
     } catch (err) {
+      console.error('Error creating or finding a store', err);
       res.status(500);
       res.json({ message: 'Error creating or finding café', err });
     }
