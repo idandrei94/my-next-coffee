@@ -56,7 +56,7 @@ const CoffeeStore = (initialProps) => {
   const id = router.query.id;
 
   const [coffeeStore, setCoffeeStore] =
-    useState(initialProps.coffeeStore) || {};
+    useState(initialProps.coffeeStore || {});
 
   const {
     state: { coffeeStores },
