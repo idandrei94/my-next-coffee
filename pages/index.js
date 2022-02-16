@@ -111,7 +111,7 @@ export default function Home(props) {
           {/* Rendered list */}
           {coffeeStores.length > 0 && (
             <div className="container w-2/3 sm:w-full sm:px-4 md:px-14">
-              <h1 className="py-2 text-4xl text-coffee-100">
+              <h1 className="py-2 text-4xl md:mt-14 text-coffee-100">
                 Coffee shops near me
               </h1>
               <div className="container grid grid-cols-1 py-6 mb-10 sm:grid-cols-2 lg:grid-cols-3 gap-14 sm:w-full">
@@ -139,9 +139,10 @@ export default function Home(props) {
             <VideoPlayer />
           </div>
         </div>
-        <div className="container mx-auto">
-          {/* Static coffee shops */}
-          {props.coffeeStores.length > 0 && (
+
+        {/* <div className="container mx-auto"> */}
+        {/* Static coffee shops */}
+        {/* {props.coffeeStores.length > 0 && (
             <div className="container w-2/3 sm:w-full sm:px-4 md:px-14">
               <h1 className="py-2 text-4xl text-coffee-100">Oslo City</h1>
               <div className="container grid grid-cols-1 py-6 mb-10 sm:grid-cols-2 lg:grid-cols-3 gap-14 sm:w-full">
@@ -163,7 +164,7 @@ export default function Home(props) {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
       </main>
     </div>
   );
